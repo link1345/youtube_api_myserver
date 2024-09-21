@@ -7,6 +7,10 @@
     "preview": "node .output/server/index.mjs"
   },
   "devDependencies": {
+    "better-sqlite3": "^11.3.0",
     "nitropack": "latest"
+  },
+  "dependencies": {
+    "@types/better-sqlite3": "^7.6.11"
   }
 }
