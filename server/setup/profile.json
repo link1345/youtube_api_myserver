@@ -1,78 +1,96 @@
 {
     "members": [
         {
-            "name": "うさねこらーじ",
-            "youtube": "usaneko_xlarge"
+            "name": "usaneko_xlarge",
+            "displayName": "うさねこらーじ",
+            "youtubeHandle": "usaneko_xlarge"
         },
         {
-            "name": "東雲絢芽",
-            "youtube": "iris2664jp"
+            "name": "iris2664jp",
+            "displayName": "東雲絢芽",
+            "youtubeHandle": "iris2664jp"
         },
         {
-            "name": "椎半音",
-            "youtube": "cshapvtuber"
+            "name": "cshapvtuber",
+            "displayName": "椎半音",
+            "youtubeHandle": "cshapvtuber"
         },
         {
-            "name": "夢向せつな",
-            "youtube": "setsunayumemukai3989"
+            "name": "setsunayumemukai3989",
+            "displayName": "夢向せつな",
+            "youtubeHandle": "setsunayumemukai3989"
         },
         {
-            "name": "小日向がく",
-            "youtube": "逸般人のがくHackerGaku"
+            "name": "HackerGaku",
+            "displayName": "小日向がく",
+            "youtubeHandle": "逸般人のがくHackerGaku"
         },
         {
-            "name": "ますかぷる",
-            "youtube": "maskaple"
+            "name": "maskaple",
+            "displayName": "ますかぷる",
+            "youtubeHandle": "maskaple"
         },
         {
             "name": "ひょんぢゅ",
-            "youtube": "ひょんぢゅ"
+            "displayName": "ひょんぢゅ",
+            "youtubeHandle": "ひょんぢゅ"
         },
         {
-            "name": "創好リナ",
-            "youtube": "linatsukusu"
+            "name": "linatsukusu",
+            "displayName": "創好リナ",
+            "youtubeHandle": "linatsukusu"
         },
         {
-            "name": "乙木イオ",
-            "youtube": "IoOtogi",
+            "name": "IoOtogi",
+            "displayName": "乙木イオ",
+            "youtubeHandle": "IoOtogi",
             "twitch": "tsukusulina"
         },
         {
-            "name": "珠響そうき",
-            "youtube": "tamayurasouki"
+            "name": "tamayurasouki",
+            "displayName": "珠響そうき",
+            "youtubeHandle": "tamayurasouki"
         },
         {
-            "name": "凪なぎさ",
-            "youtube": "NagiNagisaCh"
+            "name": "NagiNagisaCh",
+            "displayName": "凪なぎさ",
+            "youtubeHandle": "NagiNagisaCh"
         },
         {
-            "name": "坂道輪",
-            "youtube": "RinSakamichi"
+            "name": "RinSakamichi",
+            "displayName": "坂道輪",
+            "youtubeHandle": "RinSakamichi"
         },
         {
-            "name": "Kazuryu",
-            "youtube": "kazuryu"
+            "name": "kazuryu",
+            "displayName": "Kazuryu",
+            "youtubeHandle": "kazuryu"
         },
         {
-            "name": "まりんとすふぃあ",
-            "youtube": "MarineSphere8194"
+            "name": "MarineSphere8194",
+            "displayName": "まりんとすふぃあ",
+            "youtubeHandle": "MarineSphere8194"
         },
         {
-            "name": "やすビディア",
-            "youtube": "sns-university"
+            "name": "university",
+            "displayName": "やすビディア",
+            "youtubeHandle": "sns-university"
         },
         {
-            "name": "崎津 祥汰",
-            "youtube": "Shota-Sakitsu",
+            "name": "shota_sakitsu",
+            "displayName": "崎津 祥汰",
+            "youtubeHandle": "Shota-Sakitsu",
             "twitch": "shota_sakitsu"
         },
         {
-            "name": "黒音キト",
-            "youtube": "kuronekito"
+            "name": "kuronekito",
+            "displayName": "黒音キト",
+            "youtubeHandle": "kuronekito"
         },
         {
-            "name": "白犬コマ",
-            "youtube": "komasiroinu"
+            "name": "komasiroinu",
+            "displayName": "白犬コマ",
+            "youtubeHandle": "komasiroinu"
         }
     ]
 }

@@ -1,6 +1,9 @@
 import Sqlite, { Database } from "better-sqlite3";
+import { google, youtube_v3 } from "googleapis";
+import { members as ConfigMembers } from "../../setup/profile.json";
+import { getMembers } from "~/util";
 
-const initMode = true;
+const initMode = false;
 
 export default defineTask({
     meta: {
@@ -18,23 +21,95 @@ function dropDb(db: Database) {
 }
 
 function createDb(db: Database) {
-
-    db.prepare(`CREATE TABLE IF NOT EXISTS members ('id' TEXT PRIMARY KEY, 'name' TEXT, 'youtube_url' TEXT, 'youtube_id' TEXT, 'twitch_url' TEXT, 'twitch_id' TEXT)`).run();
+    db.prepare(`CREATE TABLE IF NOT EXISTS members ('name' TEXT PRIMARY KEY, 'display_name' TEXT, 'youtube_handle' TEXT, 'youtube_playlist' JSON, 'youtube_channel_id' JSON)`).run();
+    db.prepare(`CREATE TABLE IF NOT EXISTS youtube_video ('videoId' TEXT PRIMARY KEY, 'name' TEXT NOT NULL, 'title' TEXT, 'channelTitle' TEXT, 'description' TEXT, 'thumbnails' TEXT, 'liveBroadcast' TEXT, 'liveScheduledStartTime' TEXT, 'liveActualStartTime' TEXT, 'liveActualEndTime' TEXT)`).run();
 }
 
-function addMember(db: Database): { memberId: string } {
+async function getYoutubeChannel(service: youtube_v3.Youtube, handle: string): Promise<{ playlists: string[], ids: string[] }> {
+    console.log("getYoutubeChannel : ", handle, " => start!");
 
-    const memberId = String(Math.round(Math.random() * 10_000));
-    const insertMemberQuery = db.prepare(`INSERT INTO members VALUES (?, 'John', 'youtube_url', 'youtube_id', 'twitch_url', 'twitch_id')`);
-    insertMemberQuery.run(memberId);
+    const channels_result = await service.channels.list({
+        key: useRuntimeConfig().youtubeKey,
+        part: ["contentDetails"],
+        forHandle: handle
+    });
+    const member_playlists: string[] = channels_result.data.items.flatMap(e => e.contentDetails.relatedPlaylists.uploads ?? []);
+    const member_ids: string[] = channels_result.data.items.flatMap(e => e.id ?? []);
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
-    return { memberId };
+    console.log("getYoutubeChannel : ", handle, " => end!");
+    return { playlists: member_playlists, ids: member_ids };
 }
+
+// メンバーコンフィグ(setup/profile.json)とDBの設定が合っているかを、確認する。
+async function checkMemberDB(db: Database): Promise<{
+    name: string,
+    newMember: boolean,
+    youtube: {
+        handle: string, playlists: string[], ids: string[]
+    }
+}[]> {
+    const selectYoutubeHandleQuery = db.prepare('SELECT youtube_handle FROM members WHERE name = ?');
+    const googleService = google.youtube('v3');
+
+    const diffItems: {
+        name: string,
+        newMember: boolean,
+        youtube: {
+            handle: string, playlists: string[], ids: string[]
+        }
+    }[] = [];
+    for (const member of ConfigMembers) {
+        const DbHandle = await selectYoutubeHandleQuery.get(member.name);
+        if (!(DbHandle === undefined && DbHandle !== member.youtubeHandle)) {
+            continue;
+        }
+        const newMember = DbHandle ? false : true;
+
+        const { playlists, ids } = await getYoutubeChannel(googleService, member.youtubeHandle);
+        const youtube = { handle: member.youtubeHandle, playlists, ids };
+        diffItems.push({
+            name: member.name,
+            youtube,
+            newMember,
+        });
+    }
+    return diffItems;
+}
+
+function createMember(db: Database, addMembers: {
+    name: string,
+    newMember: boolean,
+    youtube: {
+        handle: string, playlists: string[], ids: string[]
+    }
+}[]) {
+    if (addMembers === undefined) return;
+
+    const insertMemberQuery = db.prepare(`INSERT INTO members VALUES (?, ?, ?, ?, ?)`);
+    const updateMemberQuery = db.prepare(`UPDATE members SET youtube_handle = ?, youtube_playlist = ?, youtube_channel_id = ? WHERE name = ?`);
+
+    for (const member of addMembers) {
+        const cMember = ConfigMembers.find(e => e.name === member.name)
+        if (cMember === undefined) continue;
+
+        // 新規メンバーならば
+        if (member.newMember) {
+            insertMemberQuery.run(cMember.name, cMember.displayName, member.youtube.handle, JSON.stringify(member.youtube.playlists), JSON.stringify(member.youtube.ids));
+            continue;
+        }
+
+        // 更新メンバーならば
+        updateMemberQuery.run(member.youtube.handle, JSON.stringify(member.youtube.playlists), JSON.stringify(member.youtube.ids), cMember.name);
+    }
+}
+
+
 
 async function runDb() {
     console.log("Running migrate task...");
 
-    const db = Sqlite();
+    const db = Sqlite('.data/vgeek.db');
 
     // @see : https://nitro.unjs.io/guide/database
     // データベースセットアップ
@@ -43,10 +118,15 @@ async function runDb() {
         createDb(db);
     }
 
-    // 初期データ挿入
-    const { memberId } = addMember(db);
+    const diff = await checkMemberDB(db);
+    createMember(db, diff);
 
     // テスト
-    const selectMemberQuery = db.prepare('SELECT * FROM members WHERE id = ?');
-    console.log(await selectMemberQuery.get(memberId));
+    //const selectMemberQuery = db.prepare('SELECT * FROM members');
+    //console.log(await selectMemberQuery.all());
+
+    console.log(getMembers());
+
+
+    db.close();
 }

@@ -11,6 +11,7 @@
     "nitropack": "latest"
   },
   "dependencies": {
-    "@types/better-sqlite3": "^7.6.11"
+    "@types/better-sqlite3": "^7.6.11",
+    "googleapis": "^144.0.0"
   }
 }
