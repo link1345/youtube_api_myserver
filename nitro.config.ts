@@ -8,7 +8,7 @@ export default defineNitroConfig({
     tasks: true,
     database: true
   },
-  "tasks": {
+  tasks: {
     "youtube:search": {
       "description": "Run youtube search"
     },

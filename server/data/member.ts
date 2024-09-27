@@ -1,1 +1,0 @@
-export const memberData: string[] = ["member1", "member2"];

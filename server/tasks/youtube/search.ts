@@ -14,14 +14,20 @@ export default defineTask({
 });
 
 
-async function getYoutubeSearchVideo(youtube: youtube_v3.Youtube, channelId: string): Promise<{
-    videoId: string,
-    channelTitle: string,
-    title: string,
-    description: string,
-    thumbnail: string,
-    liveBroadcast: string
-}[]> {
+async function getYoutubeSearchVideo(youtube: youtube_v3.Youtube, channelId: string): Promise<
+    {
+        mode: "update";
+        videoId: string;
+        channelId: string;
+        title: string;
+        channelTitle: string;
+        description: string;
+        thumbnail: string;
+        liveBroadcast: string;
+        liveScheduledStartTime: string;
+        liveActualStartTime: string;
+        liveActualEndTime: string;
+    }[]> {
     const result = await youtube.search.list({
         key: useRuntimeConfig().youtubeKey,
         part: ["snippet"],
@@ -29,32 +35,58 @@ async function getYoutubeSearchVideo(youtube: youtube_v3.Youtube, channelId: str
         type: ["video"],
         maxResults: 5
     });
-    return result.data.items.map(e => ({
-        videoId: e.id.videoId,
-        title: e.snippet.title,
-        channelTitle: e.snippet.channelTitle,
-        description: e.snippet.description,
-        thumbnail: e.snippet.thumbnails.medium.url,
-        liveBroadcast: e.snippet.liveBroadcastContent
-    }));
-}
+    if (result.status !== 200) {
+        return [];
+    }
+    const videos = result.data.items.map(e => e.id.videoId);
+    if (videos.length === 0) {
+        return [];
+    }
 
-function setData() {
+    await new Promise(resolve => setTimeout(resolve, 3000));
 
+    const resultVideos = await youtube.videos.list({
+        key: useRuntimeConfig().youtubeKey,
+        part: ["snippet", "liveStreamingDetails"],
+        id: videos,
+    });
+
+    return resultVideos.data.items.map((e) => (
+        {
+            mode: "update",
+            videoId: e.id,
+            channelId: channelId,
+            title: e.snippet.title,
+            channelTitle: e.snippet.channelTitle,
+            description: e.snippet.description,
+            thumbnail: e.snippet.thumbnails.medium.url,
+            // liveBroadcastContent ... live: ライブ中 , upcoming: ライブ前 , none: ライブ or ライブ後
+            liveBroadcast: e.snippet.liveBroadcastContent,
+            // scheduledStartTime ... ライブ予定
+            liveScheduledStartTime: e.liveStreamingDetails ? e.liveStreamingDetails.scheduledStartTime : "",
+            // actualStartTime ... ライブ開始(実際)
+            liveActualStartTime: e.liveStreamingDetails ? e.liveStreamingDetails.actualStartTime : "",
+            // actualStartTime ... ライブ終了(実際)
+            liveActualEndTime: e.liveStreamingDetails ? e.liveStreamingDetails.actualEndTime : ""
+        }
+    ));
 }
 
 async function getYoutube() {
     const youtube: youtube_v3.Youtube = google.youtube('v3');
 
     for (const member of getMembers()) {
-        for (const channelId of member.youtube_channel_id) {
-            const search = await getYoutubeSearchVideo(youtube, channelId);
-            setYoutube(member.name, search);
+        for (const id of JSON.parse(member.youtube_channel_id)) {
+            const search = await getYoutubeSearchVideo(youtube, id);
+            setYoutube("insert", member.name, search);
         }
+
     }
 
 }
 
 function runYoutube() {
-    console.log("Running youtube task...");
+    console.log("Running [youtube:search] task...");
+    getYoutube();
+    console.log("End [youtube:search]");
 }
