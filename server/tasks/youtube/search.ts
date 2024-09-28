@@ -19,6 +19,7 @@ async function getYoutubeSearchVideo(youtube: youtube_v3.Youtube, channelId: str
         mode: "update";
         videoId: string;
         channelId: string;
+        publishedAt: string,
         title: string;
         channelTitle: string;
         description: string;
@@ -55,6 +56,7 @@ async function getYoutubeSearchVideo(youtube: youtube_v3.Youtube, channelId: str
         {
             mode: "update",
             videoId: e.id,
+            publishedAt: e.snippet.publishedAt,
             channelId: channelId,
             title: e.snippet.title,
             channelTitle: e.snippet.channelTitle,
@@ -87,6 +89,7 @@ async function getYoutube() {
 
 function runYoutube() {
     console.log("Running [youtube:search] task...");
-    getYoutube();
-    console.log("End [youtube:search]");
+    getYoutube().then(() => {
+        console.log("End [youtube:search]");
+    });
 }

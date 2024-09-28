@@ -17,6 +17,7 @@ export default defineTask({
 async function getYoutubeVideo(youtube: youtube_v3.Youtube, videoId: string): Promise<(
     {
         mode: "update";
+        publishedAt: string,
         videoId: string;
         channelId: string;
         title: string;
@@ -46,6 +47,7 @@ async function getYoutubeVideo(youtube: youtube_v3.Youtube, videoId: string): Pr
     return result.data.items.map(e => ({
         mode: "update",
         videoId: e.id,
+        publishedAt: e.snippet.publishedAt,
         channelId: e.snippet.channelId,
         title: e.snippet.title,
         channelTitle: e.snippet.channelTitle,

@@ -1,7 +1,6 @@
 import Sqlite, { Database } from "better-sqlite3";
 import { google, youtube_v3 } from "googleapis";
 import { members as ConfigMembers } from "../../setup/profile.json";
-import { getMembers } from "~/util";
 
 const initMode = false;
 
@@ -18,11 +17,12 @@ export default defineTask({
 
 function dropDb(db: Database) {
     db.prepare("DROP TABLE IF EXISTS members").run();
+    db.prepare("DROP TABLE IF EXISTS youtube_video").run();
 }
 
 function createDb(db: Database) {
     db.prepare(`CREATE TABLE IF NOT EXISTS members ('name' TEXT PRIMARY KEY, 'display_name' TEXT, 'youtube_handle' TEXT, 'youtube_playlist' JSON, 'youtube_channel_id' JSON)`).run();
-    db.prepare(`CREATE TABLE IF NOT EXISTS youtube_video ('videoId' TEXT PRIMARY KEY, 'name' TEXT NOT NULL, 'title' TEXT, 'channelTitle' TEXT, 'description' TEXT, 'thumbnail' TEXT, 'liveBroadcast' TEXT, 'liveScheduledStartTime' TEXT, 'liveActualStartTime' TEXT, 'liveActualEndTime' TEXT)`).run();
+    db.prepare(`CREATE TABLE IF NOT EXISTS youtube_video ('videoId' TEXT PRIMARY KEY, 'name' TEXT NOT NULL, 'publishedAt' TEXT, 'title' TEXT, 'channelTitle' TEXT, 'description' TEXT, 'thumbnail' TEXT, 'liveBroadcast' TEXT, 'liveScheduledStartTime' TEXT, 'liveActualStartTime' TEXT, 'liveActualEndTime' TEXT)`).run();
 }
 
 async function getYoutubeChannel(service: youtube_v3.Youtube, handle: string): Promise<{ playlists: string[], ids: string[] }> {
