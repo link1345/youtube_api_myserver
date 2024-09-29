@@ -34,6 +34,7 @@ async function getYoutubeSearchVideo(youtube: youtube_v3.Youtube, channelId: str
         part: ["snippet"],
         channelId: channelId,
         type: ["video"],
+        order: "date",
         maxResults: 5
     });
     if (result.status !== 200) {
@@ -82,9 +83,7 @@ async function getYoutube() {
             const search = await getYoutubeSearchVideo(youtube, id);
             setYoutube("insert", member.name, search);
         }
-
     }
-
 }
 
 function runYoutube() {

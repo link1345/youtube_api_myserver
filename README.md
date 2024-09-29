@@ -1,4 +1,143 @@
 
-## ぶいぎーく！のAPIサーバー(予定/未公認)
+# YoutubeAPI My Server
 
-site: https://vgeekpro.com/
+## これはなに？(What is this!?)
+
+事前にYoutubeのAPIを叩くことで、動画の配信後・配信前・配信中・録画物をリストにして、WebAPIとして提供するプログラムです。
+
+このプログラムを利用することで、自分のサイト上などで動画のリストを表示することが可能です。
+
+YoutubeAPIを直接叩くと、API制限に引っかかるので、このようなものを用意する必要があります。
+
+[ - english - ]
+
+This program hits the YouTube API in advance to create a list of videos that are live, upcoming, or recorded, and serves it as a Web API.
+
+With this program, you can display a list of videos on your own site and more!
+
+Directly hitting the YouTube API can run into API limits, so having something like this is a must.
+
+### 背景 (background)
+
+「ぶいぎーく！のAPIサーバー(予定/未公認)」と銘打っていましたが、どのWebサイトにも利用できるじゃん…OSSにしよう…となったので、特に用途を制限しない方向にしました。
+
+[ - english - ]
+
+We initially branded it as the “ぶいぎーく！のAPIサーバー (Planned/Unofficial),” but then realized it could be used on any website… So, we decided to make it open-source and not restrict its use!
+
+## Command
+
+### install
+
+```
+pnpm install
+```
+
+### Dev start
+
+```
+pnpm dev
+```
+
+### build
+
+```
+pnpm build
+```
+
+### prepare
+
+```
+pnpm prepare
+```
+
+### preview
+
+```
+pnpm preview
+```
+
+## Setting
+
+### server/profile.json
+
+`server/profile.json`を下記の形に書き換えてください。
+
+nameは、このprofile.jsonで一意的な名称にください。データベースでも使用します。
+
+displayNameは、特にデータベースに関係ないので、ご自由にお使いください。
+
+youtubeHandleは、Youtubeチャンネルの `https://www.youtube.com/@******` の `******` の部分を書きます。
+
+[ - english - ]
+
+Please rewrite `server/profile.json` in the following format:
+
+name: Provide a unique name in this profile.json. This will also be used in the database.
+
+displayName: Feel free to use any name here as it is not related to the database.
+
+youtubeHandle: Write the part of the YouTube channel URL `https://www.youtube.com/@******` that corresponds to `******`.
+
+```
+{
+    "members": [
+        {
+            "name": "unique ID",
+            "displayName": "display Name",
+            "youtubeHandle": "******"
+        }
+    ]
+}
+```
+
+### Youtube API Key
+
+`.env`ファイルを、プロジェクト直下に作り、その中に下記の形式で書いてください。
+
+
+[ - english - ]
+
+Please create a `.env` file in the root directory of your project and write it in the following format
+
+```
+NITRO_YOUTUBE_KEY="******************"
+```
+
+## Q&A
+
+### Q. APIサーバーの起動ポートを変えたい (How can I change the startup port of the API server?)
+
+`.env`ファイルに下記の通りに書いて、`****` を好きな番号にしてください。
+
+[ - english - ]
+
+Please write the following in the `.env` file and replace `****` with your preferred number.
+
+```
+NITRO_PORT=****
+```
+
+### Q. 登録メンバーを削除したい (How can I delete registered members?)
+
+現時点では、データベースからのメンバーの削除は実装されていません。
+
+`server/profile.json`から削除された場合、新規に動画を取得しにいくことはありません。
+
+※ 未配信や配信中は、除く。
+
+[ - english - ]
+
+At this time, the deletion of members from the database has not been implemented. If a member is deleted from server/profile.json, the program will not fetch new videos.
+
+Note: This excludes videos that are not yet distributed or currently being distributed.
+
+
+### Q. 削除された動画は、このプログラム上ではどう処理されるのか (How are deleted videos handled in this program?)
+
+未配信や配信中の動画は、データベースから削除されますが、配信後や録画動画の場合、データベースから削除されません。
+
+[ - english - ]
+
+Videos that are not yet distributed or currently being distributed will be deleted from the database. However, videos that have already been distributed or recorded will not be deleted from the database.
+
