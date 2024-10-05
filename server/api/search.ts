@@ -16,6 +16,6 @@ export default defineEventHandler(event => {
     for (const item of paramsName) {
         youtubeItems = youtubeItems.concat(getYoutube(type, item));
     }
-
+    youtubeItems = youtubeItems.sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()).slice(0, 50);
     return youtubeItems.map(e => ({ ...e, url: `https://www.youtube.com/watch?v=${e.videoId}` }));
 })

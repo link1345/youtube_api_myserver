@@ -116,7 +116,7 @@ export function getYoutube(type: string, name: string): video[] {
     const db = Sqlite('.data/vgeek.db');
 
     if (type === "all") {
-        const selectVideoQuery = db.prepare('SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE name = ? ORDER BY publishedAt DESC LIMIT 50');
+        const selectVideoQuery = db.prepare('SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE name = ? ORDER BY date(publishedAt) DESC LIMIT 50');
         const result = selectVideoQuery.all(name);
         if (result === undefined) {
             return [];
@@ -124,7 +124,7 @@ export function getYoutube(type: string, name: string): video[] {
         return JSON.parse(JSON.stringify(result)) as video[];
     }
     if (type === "video") {
-        const selectVideoQuery = db.prepare("SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE name = ? and liveBroadcast = 'none' and liveScheduledStartTime = '' and liveActualStartTime = '' and liveActualEndTime = '' ORDER BY publishedAt DESC LIMIT 50");
+        const selectVideoQuery = db.prepare("SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE name = ? and liveBroadcast = 'none' and liveScheduledStartTime = '' and liveActualStartTime = '' and liveActualEndTime = '' ORDER BY date(publishedAt) DESC LIMIT 50");
         const result = selectVideoQuery.all(name);
         if (result === undefined) {
             return [];
@@ -132,7 +132,7 @@ export function getYoutube(type: string, name: string): video[] {
         return JSON.parse(JSON.stringify(result)) as video[];
     }
     if (type === "liveNow") {
-        const selectVideoQuery = db.prepare("SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE name = ? and liveBroadcast = 'live' ORDER BY publishedAt DESC LIMIT 50");
+        const selectVideoQuery = db.prepare("SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE name = ? and liveBroadcast = 'live' ORDER BY date(publishedAt) DESC LIMIT 50");
         const result = selectVideoQuery.all(name);
         if (result === undefined) {
             return [];
@@ -140,14 +140,14 @@ export function getYoutube(type: string, name: string): video[] {
         return JSON.parse(JSON.stringify(result)) as video[];
     }
     if (type === "liveBefore") {
-        const selectVideoQuery = db.prepare("SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE name = ? and liveBroadcast = 'upcoming' ORDER BY publishedAt DESC LIMIT 50");
+        const selectVideoQuery = db.prepare("SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE name = ? and liveBroadcast = 'upcoming' ORDER BY date(publishedAt) DESC LIMIT 50");
         const result = selectVideoQuery.all(name);
         if (result === undefined) {
             return [];
         }
         return JSON.parse(JSON.stringify(result)) as video[];
     } if (type === "liveAfter") {
-        const selectVideoQuery = db.prepare("SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE name = ? and liveBroadcast = 'none' and liveScheduledStartTime != '' and liveActualStartTime != '' and liveActualEndTime != '' ORDER BY publishedAt DESC LIMIT 50");
+        const selectVideoQuery = db.prepare("SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE name = ? and liveBroadcast = 'none' and liveScheduledStartTime != '' and liveActualStartTime != '' and liveActualEndTime != '' ORDER BY date(publishedAt) DESC LIMIT 50");
         const result = selectVideoQuery.all(name);
         if (result === undefined) {
             return [];
@@ -159,8 +159,7 @@ export function getYoutube(type: string, name: string): video[] {
 export function getAllYoutube(type: string): video[] {
     const db = Sqlite('.data/vgeek.db');
     if (type === "all") {
-        console.log(type)
-        const selectVideoQuery = db.prepare('SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video ORDER BY publishedAt DESC LIMIT 50');
+        const selectVideoQuery = db.prepare('SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video ORDER BY date(publishedAt) DESC LIMIT 50');
         const result = selectVideoQuery.all();
         if (result === undefined) {
             return [];
@@ -168,7 +167,7 @@ export function getAllYoutube(type: string): video[] {
         return JSON.parse(JSON.stringify(result)) as video[];
     }
     if (type === "video") {
-        const selectVideoQuery = db.prepare("SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE liveBroadcast = 'none' and liveScheduledStartTime = '' and liveActualStartTime = '' and liveActualEndTime = '' ORDER BY publishedAt DESC LIMIT 50");
+        const selectVideoQuery = db.prepare("SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE liveBroadcast = 'none' and liveScheduledStartTime = '' and liveActualStartTime = '' and liveActualEndTime = '' ORDER BY date(publishedAt) DESC LIMIT 50");
         const result = selectVideoQuery.all();
         if (result === undefined) {
             return [];
@@ -176,7 +175,7 @@ export function getAllYoutube(type: string): video[] {
         return JSON.parse(JSON.stringify(result)) as video[];
     }
     if (type === "liveNow") {
-        const selectVideoQuery = db.prepare("SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE liveBroadcast = 'live' ORDER BY publishedAt DESC LIMIT 50");
+        const selectVideoQuery = db.prepare("SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE liveBroadcast = 'live' ORDER BY date(publishedAt) DESC LIMIT 50");
         const result = selectVideoQuery.all();
         if (result === undefined) {
             return [];
@@ -184,14 +183,14 @@ export function getAllYoutube(type: string): video[] {
         return JSON.parse(JSON.stringify(result)) as video[];
     }
     if (type === "liveBefore") {
-        const selectVideoQuery = db.prepare("SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE liveBroadcast = 'upcoming' ORDER BY publishedAt DESC LIMIT 50");
+        const selectVideoQuery = db.prepare("SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE liveBroadcast = 'upcoming' ORDER BY date(publishedAt) DESC LIMIT 50");
         const result = selectVideoQuery.all();
         if (result === undefined) {
             return [];
         }
         return JSON.parse(JSON.stringify(result)) as video[];
     } if (type === "liveAfter") {
-        const selectVideoQuery = db.prepare("SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE liveBroadcast = 'none' and liveScheduledStartTime != '' and liveActualStartTime != '' and liveActualEndTime != '' ORDER BY publishedAt DESC LIMIT 50");
+        const selectVideoQuery = db.prepare("SELECT videoId, publishedAt, channelTitle, title, description, thumbnail, liveBroadcast, liveScheduledStartTime, liveActualStartTime, liveActualEndTime FROM youtube_video WHERE liveBroadcast = 'none' and liveScheduledStartTime != '' and liveActualStartTime != '' and liveActualEndTime != '' ORDER BY date(publishedAt) DESC LIMIT 50");
         const result = selectVideoQuery.all();
         if (result === undefined) {
             return [];

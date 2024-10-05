@@ -1,5 +1,15 @@
 //https://nitro.unjs.io/config
 export default defineNitroConfig({
+  routeRules: {
+    '/api/**': {
+      cors: true,
+      headers: {
+        'access-control-allow-methods': 'GET',
+        'Access-Control-Allow-Origin': '*',
+        'Strict-Transport-Security': 'max-age=0'
+      }
+    },
+  },
   srcDir: "server",
   runtimeConfig: {
     youtubeKey: "dev_youtube_key",
