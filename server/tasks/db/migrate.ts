@@ -2,8 +2,6 @@ import Sqlite, { Database } from "better-sqlite3";
 import { google, youtube_v3 } from "googleapis";
 import { members as ConfigMembers } from "../../setup/profile.json";
 
-const initMode = false;
-
 export default defineTask({
     meta: {
         name: "db:migrate",
@@ -14,6 +12,17 @@ export default defineTask({
         return { result: "Success" };
     },
 });
+
+function getInitFlag(db: Database): boolean {
+    const tableQuery = db.prepare(`select count(*) from sqlite_master where type='table' and name=?`);
+    const membersTable = tableQuery.get("members")["count(*)"] as Number;
+    const youtubeVideoTable = tableQuery.get("youtube_video")["count(*)"] as Number;
+
+    if (membersTable === 0 || youtubeVideoTable === 0) {
+        return true;
+    }
+    return false;
+}
 
 function dropDb(db: Database) {
     db.prepare("DROP TABLE IF EXISTS members").run();
@@ -104,16 +113,17 @@ function createMember(db: Database, addMembers: {
     }
 }
 
-
-
 async function runDb() {
     console.log("Running migrate task...");
 
     const db = Sqlite('.data/vgeek.db');
 
+    const init = getInitFlag(db);
+
     // @see : https://nitro.unjs.io/guide/database
     // データベースセットアップ
-    if (initMode) {
+    if (init) {
+        console.log(" ---> Init Start!");
         dropDb(db);
         createDb(db);
     }
@@ -123,5 +133,10 @@ async function runDb() {
 
     db.close();
 
+    if (init) {
+        await runTask('youtube:search');
+        await runTask('youtube:video');
 
+        console.log(" <---Init End!");
+    }
 }

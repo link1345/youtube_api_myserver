@@ -77,6 +77,7 @@ async function getYoutube() {
 
 function runYoutube() {
     console.log("Running [youtube:video] task...");
-    getYoutube();
-    console.log("End [youtube:video]");
+    getYoutube().then(() => {
+        console.log("End [youtube:video]");
+    });
 }

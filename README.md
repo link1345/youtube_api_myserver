@@ -104,6 +104,19 @@ Please create a `.env` file in the root directory of your project and write it i
 NITRO_YOUTUBE_KEY="******************"
 ```
 
+### 初回起動(Init Start)
+
+初回起動時は、DBの設定やユーザーの登録、初回の動画取得処理が入ります。
+
+` ---> Init Start!`と表記されたら初回起動処理が走っています。` <---Init End!`が、表示されるまで、プログラムを切らないでください。
+
+[ - english - ]
+
+During the initial startup, the database settings, user registration, and the initial video retrieval process will be performed.
+
+When ` ---> Init Start!` is displayed, the initial startup process is running. Please do not turn off the program until ` <---Init End!` is displayed.
+
+
 ## Q&A
 
 ### Q. APIサーバーの起動ポートを変えたい (How can I change the startup port of the API server?)
@@ -115,7 +128,7 @@ NITRO_YOUTUBE_KEY="******************"
 Please write the following in the `.env` file and replace `****` with your preferred number.
 
 ```
-NITRO_PORT=****
+PORT=****
 ```
 
 ### Q. 登録メンバーを削除したい (How can I delete registered members?)
