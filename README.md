@@ -116,6 +116,45 @@ During the initial startup, the database settings, user registration, and the in
 
 When ` ---> Init Start!` is displayed, the initial startup process is running. Please do not turn off the program until ` <---Init End!` is displayed.
 
+### API一覧( API list )
+
+#### /api/member
+
+設定ファイルに登録されているメンバーの一覧が見れます。
+
+[ - english - ]
+
+You can view the list of members registered in the configuration file.
+
+#### /api/search
+
+DBに登録されている動画一覧が見れます。
+
+[ - english - ]
+
+You can view the list of videos registered in the database.
+
+#### /api/search?type=***
+
+* video (録画)
+* liveNow (ライブ中)
+* liveBefore (ライブ前)
+* liveAfter (ライブ後)
+
+DBに登録されている動画のうち、特定のタイプの動画一覧が見れます。
+
+[ - english - ]
+
+You can view the list of specific types of videos registered in the database.
+
+
+#### /api/search?name=***
+
+DBに登録されている動画のうち、特定のメンバー(nameを指定)の動画一覧が見れます。
+
+[ - english - ]
+
+You can view the list of videos registered in the database for specific members (specify the name)
 
 ## Q&A
 
