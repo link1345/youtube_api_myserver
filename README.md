@@ -170,6 +170,30 @@ Please write the following in the `.env` file and replace `****` with your prefe
 PORT=****
 ```
 
+### Q. 追加メンバーのYoutue動画更新されない (  )
+
+動画一覧の取得は、12時間に1回行われます。
+
+新規メンバーも、12時間に1回のタイミングで更新されます。
+
+未ライブ、ライブ中の動画の取得は、1時間に1回行われます。
+
+もし、強制的に更新したい場合は、server/plugins/hello.tsで下記の文のコメントアウトを外してください。
+
+```
+await runTask('youtube:search');
+```
+
+[ - english - ]
+
+The list of videos is retrieved once every 12 hours.
+
+New members are also updated every 12 hours.
+
+Retrieval of videos that are not live or currently live occurs every hour.
+
+If you want to force an update, please uncomment the following line in server/plugins/hello.ts.
+
 ### Q. 登録メンバーを削除したい (How can I delete registered members?)
 
 現時点では、データベースからのメンバーの削除は実装されていません。
