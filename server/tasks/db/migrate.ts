@@ -129,8 +129,10 @@ async function runDb() {
         createDb(db);
     }
 
+    console.log(" ---> Start : DB Cheack!");
     const diff = await checkMemberDB(db);
     createMember(db, diff);
+    console.log(" ---> End : DB Cheack!");
 
     db.close();
 
