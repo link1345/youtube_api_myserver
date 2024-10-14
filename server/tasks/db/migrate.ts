@@ -70,7 +70,8 @@ async function checkMemberDB(db: Database): Promise<{
     }[] = [];
     for (const member of ConfigMembers) {
         const DbHandle = await selectYoutubeHandleQuery.get(member.name);
-        if (!(DbHandle === undefined && DbHandle !== member.youtubeHandle)) {
+        if (!(DbHandle === undefined && DbHandle["youtube_handle"] !== member.youtubeHandle)) {
+            console.log("diff not change", DbHandle["youtube_handle"], member.youtubeHandle)
             continue;
         }
         const newMember = DbHandle ? false : true;
